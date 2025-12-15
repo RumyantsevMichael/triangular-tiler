@@ -80,6 +80,8 @@ This generates the `dist/` folder with compiled JavaScript modules.
 
 ## Running the Demo
 
+### Local Development
+
 1. Build the project:
 ```bash
 npm run build
@@ -93,6 +95,20 @@ npm run demo
 3. Open your browser to `http://localhost:8000/demo/`
 
 **Note**: You need a WebGPU-enabled browser (Chrome/Edge 113+, or enable experimental features in other browsers).
+
+### GitHub Pages Deployment
+
+The project includes a GitHub Actions workflow that automatically builds and deploys the demo to GitHub Pages when you push to the `main` or `master` branch.
+
+To enable GitHub Pages:
+
+1. Go to your repository settings
+2. Navigate to **Pages** under **Code and automation**
+3. Under **Source**, select **GitHub Actions**
+4. Push your changes to the main branch
+5. The workflow will automatically build and deploy the site
+
+The demo will be available at: `https://[username].github.io/[repository-name]/`
 
 ## Usage
 
