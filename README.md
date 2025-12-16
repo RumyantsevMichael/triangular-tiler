@@ -70,31 +70,57 @@ npm install
 
 ## Building
 
-Compile TypeScript to JavaScript:
+### Build Everything (Library + Demo)
 
 ```bash
 npm run build
 ```
 
-This generates the `dist/` folder with compiled JavaScript modules.
+This runs both TypeScript compilation and Vite build:
+- Generates `dist/` folder with compiled library modules and type definitions
+- Generates `build/` folder with bundled demo application
+
+### Build Library Only
+
+```bash
+npm run build:lib
+```
+
+Compiles TypeScript source to JavaScript in `dist/` folder.
+
+### Build Demo Only
+
+```bash
+npm run build:demo
+```
+
+Builds the demo application with Vite to `build/` folder.
 
 ## Running the Demo
 
-### Local Development
+### Local Development with Vite
 
-1. Build the project:
+Start the Vite development server:
+
 ```bash
-npm run build
+npm run dev
 ```
 
-2. Start a local web server:
-```bash
-npm run demo
-```
-
-3. Open your browser to `http://localhost:8000/demo/`
+This will:
+- Start a local HTTPS server on `https://localhost:3000`
+- Automatically open your browser
+- Provide hot module replacement (HMR)
+- Use a self-signed certificate for WebGPU support in Safari
 
 **Note**: You need a WebGPU-enabled browser (Chrome/Edge 113+, or enable experimental features in other browsers).
+
+### Preview Production Build
+
+After building, preview the production bundle:
+
+```bash
+npm run preview
+```
 
 ### GitHub Pages Deployment
 

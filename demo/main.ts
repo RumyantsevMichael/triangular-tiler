@@ -1,16 +1,17 @@
-import { MapGenerator } from '../dist/generator.js';
-import { WebGPURenderer } from '../dist/renderer.js';
-import { baseTiles } from '../dist/tiles.js';
-import { createPalette } from '../dist/tileUtils.js';
-import { generateGridCoords } from '../dist/grid.js';
+import { MapGenerator } from '../src/generator';
+import { WebGPURenderer } from '../src/renderer';
+import { baseTiles } from '../src/tiles';
+import { createPalette } from '../src/tileUtils';
+import { generateGridCoords } from '../src/grid';
+import type { PlacedTile } from '../src/types';
 
-let renderer;
-let generator;
-let currentTiles = [];
+let renderer: WebGPURenderer | null = null;
+let generator: MapGenerator | null = null;
+let currentTiles: PlacedTile[] = [];
 
-async function init() {
-    const canvas = document.getElementById('canvas');
-    const tileSize = parseInt(document.getElementById('tileSize').value);
+async function init(): Promise<void> {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    const tileSize = parseInt((document.getElementById('tileSize') as HTMLInputElement).value);
 
     // Check WebGPU support
     if (!navigator.gpu) {
@@ -30,18 +31,18 @@ async function init() {
         // Generate initial map
         generateMap();
     } catch (error) {
-        showError(`Failed to initialize WebGPU: ${error.message}`);
+        showError(`Failed to initialize WebGPU: ${(error as Error).message}`);
         console.error(error);
     }
 }
 
-function generateMap() {
-    const width = parseInt(document.getElementById('width').value);
-    const height = parseInt(document.getElementById('height').value);
-    const tileSize = parseInt(document.getElementById('tileSize').value);
+function generateMap(): void {
+    const width = parseInt((document.getElementById('width') as HTMLInputElement).value);
+    const height = parseInt((document.getElementById('height') as HTMLInputElement).value);
+    const tileSize = parseInt((document.getElementById('tileSize') as HTMLInputElement).value);
 
     // Update canvas size
-    const canvas = document.getElementById('canvas');
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     canvas.width = width * tileSize + tileSize;
     canvas.height = height * tileSize * Math.sqrt(3) / 2 + tileSize;
 
@@ -61,13 +62,13 @@ function generateMap() {
 
         console.log(`Generated ${currentTiles.length} tiles`);
     } catch (error) {
-        showError(`Failed to generate map: ${error.message}`);
+        showError(`Failed to generate map: ${(error as Error).message}`);
         console.error(error);
     }
 }
 
-function showError(message) {
-    const container = document.querySelector('.container');
+function showError(message: string): void {
+    const container = document.querySelector('.container')!;
     const existingError = container.querySelector('.error');
 
     if (existingError) {
