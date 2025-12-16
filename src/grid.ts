@@ -32,9 +32,20 @@ export function getNeighbors(coord: TriCoord): [TriCoord, TriCoord, TriCoord] {
  * Get the opposite edge index for a neighbor.
  * When triangle A's edge i connects to triangle B,
  * we need to know which edge of B connects back.
+ *
+ * Based on the grid geometry, edges always match with the same index
+ * regardless of orientation.
+ *
+ * @param edgeIndex The edge index on the current triangle
+ * @param currentPointing The orientation of the current triangle (unused but kept for clarity)
+ * @param neighborPointing The orientation of the neighbor triangle (unused but kept for clarity)
  */
-export function getOppositeEdge(edgeIndex: number): number {
-  // In our neighbor ordering, the opposite edges line up nicely
+export function getOppositeEdge(
+  edgeIndex: number,
+  currentPointing: 'up' | 'down',
+  neighborPointing: 'up' | 'down'
+): number {
+  // The edge indices align directly in our coordinate system
   return edgeIndex;
 }
 

@@ -26,26 +26,43 @@ export class MapGenerator {
 
   /**
    * Generate a map using Wave Function Collapse algorithm
+   * Retries up to maxAttempts times if contradictions occur
+   *
+   * @param coords Grid coordinates to generate tiles for
+   * @param maxAttempts Maximum number of generation attempts (default: 100)
    */
-  generate(coords: TriCoord[]): PlacedTile[] {
-    this.initializeCells(coords);
+  generate(coords: TriCoord[], maxAttempts: number = 100): PlacedTile[] {
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      try {
+        this.initializeCells(coords);
 
-    while (true) {
-      // Find cell with minimum entropy (fewest possibilities)
-      const cellToCollapse = this.findMinEntropyCell();
+        while (true) {
+          // Find cell with minimum entropy (fewest possibilities)
+          const cellToCollapse = this.findMinEntropyCell();
 
-      if (!cellToCollapse) {
-        break; // All cells collapsed
+          if (!cellToCollapse) {
+            break; // All cells collapsed
+          }
+
+          // Collapse the cell (choose a random tile)
+          this.collapseCell(cellToCollapse);
+
+          // Propagate constraints to neighbors
+          this.propagate(cellToCollapse);
+        }
+
+        return this.getPlacedTiles();
+      } catch (error) {
+        // Contradiction occurred, try again
+        if (attempt === maxAttempts - 1) {
+          // Last attempt failed, rethrow
+          throw error;
+        }
+        // Otherwise retry
       }
-
-      // Collapse the cell (choose a random tile)
-      this.collapseCell(cellToCollapse);
-
-      // Propagate constraints to neighbors
-      this.propagate(cellToCollapse);
     }
 
-    return this.getPlacedTiles();
+    throw new Error('Failed to generate map after maximum attempts');
   }
 
   private initializeCells(coords: TriCoord[]): void {
@@ -140,7 +157,9 @@ export class MapGenerator {
 
   private getValidNeighborTiles(cell: Cell, edgeIdx: number): Set<string> {
     const validTiles = new Set<string>();
-    const oppositeEdge = getOppositeEdge(edgeIdx);
+    const neighbors = getNeighbors(cell.coord);
+    const neighborCoord = neighbors[edgeIdx];
+    const oppositeEdge = getOppositeEdge(edgeIdx, cell.coord.pointing, neighborCoord.pointing);
 
     for (const tileId of cell.possibleTiles) {
       const tile = this.tileMap.get(tileId)!;
