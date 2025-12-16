@@ -38,9 +38,10 @@ jobs:
       - name: Prepare deployment
         run: |
           mkdir -p _site
-          cp -r demo/* _site/
+          cp -r demo _site/
           cp -r dist _site/
           cp .nojekyll _site/
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=demo/"></head><body><p>Redirecting to <a href="demo/">demo</a>...</p></body></html>' > _site/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
